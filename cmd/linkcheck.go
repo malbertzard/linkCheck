@@ -1,23 +1,34 @@
 package main
 
 import (
+	"encoding/csv"
+	"flag"
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
 	"io"
 	"golang.org/x/net/html"
 )
 
-func main() {
-	startURL := "https://exactcode.com"
-	domain := getDomain(startURL)
+type BrokenLink struct {
+	Link     string
+	Status   int
+	FoundAt  string
+}
 
+func main() {
+	startURL := flag.String("url", "https://example.com", "The URL to start crawling from")
+	outputFile := flag.String("output", "", "The file path to export broken links as CSV (optional)")
+
+	flag.Parse()
+
+	domain := getDomain(*startURL)
 	visited := map[string]bool{}
-	brokenLinks := map[string]int{}
-	toVisit := []string{startURL}
+	brokenLinks := []BrokenLink{}
+	toVisit := []string{*startURL}
 
 	for len(toVisit) > 0 {
-		// Dequeue a URL to visit
 		currentURL := toVisit[0]
 		toVisit = toVisit[1:]
 
@@ -26,29 +37,28 @@ func main() {
 		}
 		visited[currentURL] = true
 
-		// Get all links on the current page
 		links := getAllLinks(currentURL, domain)
 
 		for _, link := range links {
 			if !visited[link] {
 				toVisit = append(toVisit, link)
 			}
-			// Check if the link is broken
+
 			status := checkLink(link)
 			if status >= 400 {
-				brokenLinks[link] = status
+				brokenLinks = append(brokenLinks, BrokenLink{
+					Link:    link,
+					Status:  status,
+					FoundAt: currentURL,
+				})
 			}
 		}
 	}
 
-	// Output broken links
-	if len(brokenLinks) > 0 {
-		fmt.Println("Broken links found:")
-		for link, status := range brokenLinks {
-			fmt.Printf("%s: %d\n", link, status)
-		}
+	if *outputFile != "" {
+		exportCSV(*outputFile, brokenLinks)
 	} else {
-		fmt.Println("No broken links found.")
+		printBrokenLinks(brokenLinks)
 	}
 }
 
@@ -123,4 +133,37 @@ func checkLink(link string) int {
 	}
 	defer resp.Body.Close()
 	return resp.StatusCode
+}
+
+func printBrokenLinks(brokenLinks []BrokenLink) {
+	if len(brokenLinks) > 0 {
+		fmt.Println("Broken links found:")
+		for _, bl := range brokenLinks {
+			fmt.Printf("%s: %d (found at: %s)\n", bl.Link, bl.Status, bl.FoundAt)
+		}
+	} else {
+		fmt.Println("No broken links found.")
+	}
+}
+
+func exportCSV(filename string, brokenLinks []BrokenLink) {
+	file, err := os.Create(filename)
+	if err != nil {
+		fmt.Printf("Error creating file: %v\n", err)
+		return
+	}
+	defer file.Close()
+
+	writer := csv.NewWriter(file)
+	defer writer.Flush()
+
+	// Write header
+	writer.Write([]string{"Link", "Status Code", "Found At"})
+
+	// Write broken links data
+	for _, bl := range brokenLinks {
+		writer.Write([]string{bl.Link, fmt.Sprintf("%d", bl.Status), bl.FoundAt})
+	}
+
+	fmt.Printf("Broken links exported to %s\n", filename)
 }
