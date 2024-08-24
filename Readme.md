@@ -30,7 +30,7 @@ This Go project is a command-line tool that crawls a given website, checks for b
 3. **Run the application:**
 
    ```bash
-   ./linkCheck -url "https://example.com"
+   ./linkcheck -url "https://example.com"
    ```
 
 ## Usage
@@ -38,7 +38,7 @@ This Go project is a command-line tool that crawls a given website, checks for b
 The application can be run with the following command-line arguments:
 
 ```bash
-./linkCheck -url "https://example.com" -output "broken_links.csv" -concurrency 20
+./linkcheck -url "https://example.com" -output "broken_links.csv" -concurrency 20
 ```
 
 ### Command-Line Options
@@ -50,12 +50,12 @@ The application can be run with the following command-line arguments:
 
 1. **Basic Usage**:
    ```bash
-   ./linkCheck -url "https://example.com"
+   ./linkcheck -url "https://example.com"
 	   ```
 
 2. **Exporting Results to CSV**:
    ```bash
-   ./linkCheck -url "https://example.com" -output "broken_links.csv"
+   ./linkcheck -url "https://example.com" -output "broken_links.csv"
    ```
 
 ## Output

@@ -9,15 +9,15 @@ all: build
 
 build: $(GOFILES)
 	@echo "Building the application..."
-	@go build -o $(BINARY_NAME) $(MAIN_PACKAGE)
+	@go build -o ./bin/$(BINARY_NAME) $(MAIN_PACKAGE)
 
 run: build
 	@echo "Running the application..."
-	./$(BINARY_NAME)
+	./bin/$(BINARY_NAME)
 
 clean:
 	@echo "Cleaning up..."
-	@rm -f $(BINARY_NAME)
+	@rm -f ./bin/$(BINARY_NAME)
 
 # Clean, build, and run the application
 rebuild: clean build run
