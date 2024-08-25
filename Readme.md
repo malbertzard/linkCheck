@@ -2,8 +2,10 @@
 
 This Go project is a command-line tool that crawls a given website, checks for broken links (HTTP status 4xx or 5xx), and reports where those broken links were found. The tool export the results to a CSV file.
 
-## Todo
--[ ] Add concurrency to make it go faster
+## Todos
+TODO: -[x] Add debug options 
+TODO: -[ ] Seperate between crawled sites and checked links
+TODO: -[ ] Add concurrency to make it go faster
 
 ## Features
 
@@ -21,7 +23,7 @@ This Go project is a command-line tool that crawls a given website, checks for b
 
 2. **Build the application:**
 
-   You can use the provided Makefile for building the project:
+You can use the provided Makefile for building the project:
 
    ```bash
    make build

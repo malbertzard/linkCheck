@@ -4,22 +4,24 @@ import (
 	"encoding/csv"
 	"flag"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"os"
-	"io"
+
 	"golang.org/x/net/html"
 )
 
 type BrokenLink struct {
-	Link     string
-	Status   int
-	FoundAt  string
+	Link    string
+	Status  int
+	FoundAt string
 }
 
 func main() {
 	startURL := flag.String("url", "https://example.com", "The URL to start crawling from")
 	outputFile := flag.String("output", "", "The file path to export broken links as CSV (optional)")
+	debug := flag.Bool("debug", false, "Show more infos")
 
 	flag.Parse()
 
@@ -42,6 +44,10 @@ func main() {
 		for _, link := range links {
 			if !visited[link] {
 				toVisit = append(toVisit, link)
+			}
+
+			if *debug {
+				println("Currently visiting: " + currentURL + " checking: " + link)
 			}
 
 			status := checkLink(link)
