@@ -3,9 +3,9 @@
 This Go project is a command-line tool that crawls a given website, checks for broken links (HTTP status 4xx or 5xx), and reports where those broken links were found. The tool export the results to a CSV file.
 
 ## Todos
-TODO: -[x] Add debug options 
-TODO: -[ ] Seperate between crawled sites and checked links
-TODO: -[ ] Add concurrency to make it go faster
+- [x] Add debug options
+- [ ] Seperate between crawled sites and checked links
+- [ ] Add concurrency to make it go faster
 
 ## Features
 
@@ -16,24 +16,24 @@ TODO: -[ ] Add concurrency to make it go faster
 
 1. **Clone the repository:**
 
-   ```bash
-   git clone https://github.com/malbertzard/linkCheck.git
-   cd linkCheck
-   ```
+```bash
+git clone https://github.com/malbertzard/linkCheck.git
+cd linkCheck
+```
 
 2. **Build the application:**
 
 You can use the provided Makefile for building the project:
 
-   ```bash
-   make build
-   ```
+```bash
+make build
+```
 
 3. **Run the application:**
 
-   ```bash
-   ./linkcheck -url "https://example.com"
-   ```
+```bash
+./linkcheck -url "https://example.com"
+```
 
 ## Usage
 
